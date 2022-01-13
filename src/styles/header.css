@@ -1,0 +1,29 @@
+.header {
+    background-color: #10102B;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    padding: 20px 30px;
+}
+
+.user-actions {
+    display: flex;
+}
+
+.user-action {
+    border-radius: 5px;
+    margin: 0 5px;
+    padding: 5px 15px;
+}
+
+.user-action a {
+    vertical-align: -webkit-baseline-middle;
+}
+
+.user-action.login {
+    border: 1px solid blue;
+}
+
+.user-action.register {
+    background-color: blue;
+}
