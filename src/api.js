@@ -4,7 +4,7 @@ export default class Api {
     }
 
     addWorkout = async () => {
-        const response = fetch(`${this.url}/workouts/add`, {
+        const response = await fetch(`${this.url}/workouts/add`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -14,26 +14,25 @@ export default class Api {
     }
 
     getCurrentWorkout = async (userId) => {
-        const response = fetch(`${this.url}/user/${userId}/currentworkouts`, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return await response.json();
+        const response = await fetch(`${this.url}/user/${userId}/currentworkouts`);
+        if(response) {
+            var current = await response.json();
+            return current;
+        }
+        return null;
     }
 
-    addExercise = async (name, type) => {
-        const exercise = {
+    addExercise = async (id, name, type) => {
+        const data = {
             name: name,
             type: type
         }
-        const response = await fetch(`${this.url}/exercises/add`, {
+        const response = await fetch(`${this.url}/workouts/${id}/exercises/add`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(exercise)
+            body: JSON.stringify(data)
         });
         return await response.json();
     }

@@ -15,8 +15,8 @@ const Home = ({user}) => {
     useEffect(() => {
         (async () => {
             if(api) {
-                const currentWorkout = await api.getCurrentWorkout(1);
-                if(currentWorkout) {
+                const currentWorkout = await api.getCurrentWorkout(3);
+;                if(currentWorkout) {
                     setCurrentWorkout(currentWorkout);
                 }
             }
@@ -36,7 +36,7 @@ const Home = ({user}) => {
 
     const addExercise = async (name, type) => {
         if(api) {
-            const newExercise = await api.addExercise(name, type);
+            const newExercise = await api.addExercise(currentWorkout.id, name, type);
             if(newExercise) {
                 setExerciseName('');
                 setExerciseType('');
@@ -46,11 +46,13 @@ const Home = ({user}) => {
 
     return <div className="container">
         <div className="workout-container">
-            <button onClick={() => startWorkout()}>Start a workout</button>
-
-            {currentWorkout && (
+            {!currentWorkout 
+            ? (
+                <button onClick={() => startWorkout()}>Start a workout</button>
+            ) : (
                 <div>
                     <div className="add-exercise-container">
+                        <p>What your next exercise</p>
                         <input type="text" placeholder="Name" value={exerciseName} onChange={e => setExerciseName(e.target.value)}/>
                         <input type="text" placeholder="Type" value={exerciseType} onChange={e => setExerciseType(e.target.value)}/>
                         <button onClick={() => addExercise(exerciseName, exerciseType)}>Add</button>
