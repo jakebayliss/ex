@@ -11,6 +11,7 @@ const Home = ({user}) => {
     const [currentWorkout, setCurrentWorkout] = useState(null);
     const [exerciseName, setExerciseName] = useState('');
     const [exerciseType, setExerciseType] = useState('');
+    const [exercises, setExercises] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -18,6 +19,14 @@ const Home = ({user}) => {
                 const currentWorkout = await api.getCurrentWorkout(3);
 ;                if(currentWorkout) {
                     setCurrentWorkout(currentWorkout);
+                    console.log(currentWorkout);
+
+                    if(currentWorkout.exerciseCount > 0) {
+                        const exercises = await api.getCurrentExercises(currentWorkout.id);
+                        if(exercises) {
+                            setExercises(exercises);
+                        }
+                    }
                 }
             }
         })();
@@ -57,6 +66,11 @@ const Home = ({user}) => {
                         <input type="text" placeholder="Type" value={exerciseType} onChange={e => setExerciseType(e.target.value)}/>
                         <button onClick={() => addExercise(exerciseName, exerciseType)}>Add</button>
                     </div>
+                    {exercises && (
+                        <div>
+                            {exercises.map(x => <p>{x.name}</p>)}
+                        </div>
+                    )}
                     <button onClick={() => saveWorkout(user)}>Save workout</button>
                 </div>
             )}

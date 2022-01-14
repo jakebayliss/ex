@@ -36,5 +36,14 @@ export default class Api {
         });
         return await response.json();
     }
+
+    getCurrentExercises = async (id) => {
+        const response = await fetch(`${this.url}/workouts/${id}/currentexercises`);
+        if(response) {
+            var current = await response.json();
+            return current;
+        }
+        return null;
+    }
 }
     
