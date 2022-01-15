@@ -2,53 +2,67 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Api from '../api';
+import Exercise from '../components/Exercise';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
+import FormSelect from 'react-bootstrap/FormSelect';
 
 const Home = ({user}) => {
 
     const [api, setApi] = useState(new Api('https://localhost:7269'));
 
-    const [workoutStarted, setWorkoutStarted] = useState(false);
     const [currentWorkout, setCurrentWorkout] = useState(null);
     const [exerciseName, setExerciseName] = useState('');
-    const [exerciseType, setExerciseType] = useState('');
-    const [exercises, setExercises] = useState([]);
+    const [workoutTypes, setWorkoutTypes] = useState([]);
+    const [workoutType, setWorkoutType] = useState('');
 
     useEffect(() => {
         (async () => {
             if(api) {
-                const currentWorkout = await api.getCurrentWorkout(3);
-;                if(currentWorkout) {
+                const workoutTypes = await api.getWorkoutTypes();
+                setWorkoutTypes(workoutTypes);
+                const currentWorkout = await api.getCurrentWorkout(1);
+                if(currentWorkout) {
                     setCurrentWorkout(currentWorkout);
                     console.log(currentWorkout);
-
-                    if(currentWorkout.exerciseCount > 0) {
-                        const exercises = await api.getCurrentExercises(currentWorkout.id);
-                        if(exercises) {
-                            setExercises(exercises);
-                        }
-                    }
                 }
             }
         })();
     }, []);
     
     const startWorkout = async () => {
-        if(api) {
-            setCurrentWorkout(await api.addWorkout());
+        console.log(workoutType);
+        if(api && workoutType) {
+            setCurrentWorkout(await api.addWorkout(workoutType));
             setWorkoutStarted(true);
         }
     }
 
-    const saveWorkout = () => {
-        setWorkoutStarted(false);
+    const saveWorkout = async () => {
+        var saved = await api.saveWorkout(currentWorkout.id);
+        if(saved) {
+            setCurrentWorkout(null);
+        }
     }
 
-    const addExercise = async (name, type) => {
-        if(api) {
-            const newExercise = await api.addExercise(currentWorkout.id, name, type);
-            if(newExercise) {
+    const addExercise = async (name) => {
+        if(api && name) {
+            const newCurrentWorkout = await api.addExercise(currentWorkout.id, name);
+            if(newCurrentWorkout) {
+                setCurrentWorkout(newCurrentWorkout);
                 setExerciseName('');
-                setExerciseType('');
+                setWorkoutType('');
+            }
+        }
+    }
+
+    const addSet = async (id, weight, reps) => {
+        if(api) {
+            const newCurrentWorkout = await api.addSet(currentWorkout.id, id, weight, reps);
+            if(newCurrentWorkout) {
+                setCurrentWorkout(newCurrentWorkout);
             }
         }
     }
@@ -57,21 +71,27 @@ const Home = ({user}) => {
         <div className="workout-container">
             {!currentWorkout 
             ? (
-                <button onClick={() => startWorkout()}>Start a workout</button>
+                <div>
+                    <Button onClick={() => startWorkout()}>Start a workout</Button>
+                    <FormSelect value={workoutType} onChange={e => setWorkoutType(e.target.value)}>
+                        {workoutTypes && (
+                            workoutTypes.map(x => <option value={x.id}>{x.name}</option>)
+                        )}
+                    </FormSelect>
+                </div>
             ) : (
                 <div>
                     <div className="add-exercise-container">
-                        <p>What your next exercise</p>
-                        <input type="text" placeholder="Name" value={exerciseName} onChange={e => setExerciseName(e.target.value)}/>
-                        <input type="text" placeholder="Type" value={exerciseType} onChange={e => setExerciseType(e.target.value)}/>
-                        <button onClick={() => addExercise(exerciseName, exerciseType)}>Add</button>
+                        <p>Whats your next exercise</p>
+                        <FormControl type="text" placeholder="Name" value={exerciseName} onChange={e => setExerciseName(e.target.value)}/>
+                        <Button onClick={() => addExercise(exerciseName)}>Add</Button>
                     </div>
-                    {exercises && (
+                    {currentWorkout.exercises && (
                         <div>
-                            {exercises.map(x => <p>{x.name}</p>)}
+                            {currentWorkout.exercises.map(x => <Exercise key={x.id} name={x.name} sets={x.sets} addSet={(weight, reps) => addSet(x.id, weight, reps)}/>)}
                         </div>
                     )}
-                    <button onClick={() => saveWorkout(user)}>Save workout</button>
+                    <Button onClick={() => saveWorkout()}>Save workout</Button>
                 </div>
             )}
         </div>

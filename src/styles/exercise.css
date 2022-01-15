@@ -1,0 +1,26 @@
+.exercise-container {
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0
+}
+
+.set {
+    display: flex;
+    margin: 5px;
+}
+
+.set p {
+    margin-right: 10%;
+}
+
+.set-control-container {
+    display: flex;
+}
+
+.set-control {
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}

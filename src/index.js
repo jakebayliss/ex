@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 import './styles/master.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
 

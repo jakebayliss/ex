@@ -8,7 +8,7 @@ body {
     color: white;
 }
 
-h1 {
+h1, p {
     margin: 0;
 }
 
@@ -25,5 +25,5 @@ li a {
 
 .container {
     margin: auto;
-    width: 75%;
+    width: 90%;
 }

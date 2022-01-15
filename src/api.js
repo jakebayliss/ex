@@ -3,12 +3,25 @@ export default class Api {
         this.url = url;
     }
 
-    addWorkout = async () => {
+    getWorkoutTypes = async () => {
+        const response = await fetch(`${this.url}/workouttypes`);
+        if(response) {
+            var types = await response.json();
+            return types;
+        }
+        return null;
+    }
+
+    addWorkout = async (workoutType) => {
+        const data = {
+            type: workoutType
+        }
         const response = await fetch(`${this.url}/workouts/add`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(data)
         });
         return await response.json();
     }
@@ -22,10 +35,22 @@ export default class Api {
         return null;
     }
 
-    addExercise = async (id, name, type) => {
+    saveWorkout = async (id) => {
+        const response = await fetch(`${this.url}/workouts/${id}/save`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if(response) {
+            return true;
+        }
+        return false;
+    }
+
+    addExercise = async (id, name) => {
         const data = {
-            name: name,
-            type: type
+            name: name
         }
         const response = await fetch(`${this.url}/workouts/${id}/exercises/add`, {
             method: 'post',
@@ -37,13 +62,19 @@ export default class Api {
         return await response.json();
     }
 
-    getCurrentExercises = async (id) => {
-        const response = await fetch(`${this.url}/workouts/${id}/currentexercises`);
-        if(response) {
-            var current = await response.json();
-            return current;
+    addSet = async (workoutId, exerciseId, weight, reps) => {
+        const data = {
+            weight: weight,
+            reps: reps
         }
-        return null;
+        const response = await fetch(`${this.url}/workouts/${workoutId}/exercises/${exerciseId}/sets/add`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
     }
 }
     
