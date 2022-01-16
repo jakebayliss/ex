@@ -12,9 +12,9 @@ export default class Api {
         return null;
     }
 
-    addWorkout = async (workoutType) => {
+    addWorkout = async (type) => {
         const data = {
-            type: workoutType
+            name: type
         }
         const response = await fetch(`${this.url}/workouts/add`, {
             method: 'post',

@@ -27,3 +27,11 @@ li a {
     margin: auto;
     width: 90%;
 }
+
+.accordion-body {
+    padding: 10px;
+}
+
+.accordion-button {
+    padding: 12px;
+}

@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import FormControl from 'react-bootstrap/FormControl';
 import FormSelect from 'react-bootstrap/FormSelect';
+import { Accordion } from 'react-bootstrap';
 
 const Home = ({user}) => {
 
@@ -33,10 +34,9 @@ const Home = ({user}) => {
     }, []);
     
     const startWorkout = async () => {
-        console.log(workoutType);
         if(api && workoutType) {
+            console.log(workoutType);
             setCurrentWorkout(await api.addWorkout(workoutType));
-            setWorkoutStarted(true);
         }
     }
 
@@ -73,11 +73,12 @@ const Home = ({user}) => {
             ? (
                 <div>
                     <Button onClick={() => startWorkout()}>Start a workout</Button>
-                    <FormSelect value={workoutType} onChange={e => setWorkoutType(e.target.value)}>
+                    <select value={workoutType} onChange={(e) => setWorkoutType(e.target.value)}>
+                        <option></option>
                         {workoutTypes && (
-                            workoutTypes.map(x => <option value={x.id}>{x.name}</option>)
+                            workoutTypes.map((x, i) => <option key={i} value={x.name}>{x.name}</option>)
                         )}
-                    </FormSelect>
+                    </select>
                 </div>
             ) : (
                 <div>
@@ -86,10 +87,10 @@ const Home = ({user}) => {
                         <FormControl type="text" placeholder="Name" value={exerciseName} onChange={e => setExerciseName(e.target.value)}/>
                         <Button onClick={() => addExercise(exerciseName)}>Add</Button>
                     </div>
-                    {currentWorkout.exercises && (
-                        <div>
-                            {currentWorkout.exercises.map(x => <Exercise key={x.id} name={x.name} sets={x.sets} addSet={(weight, reps) => addSet(x.id, weight, reps)}/>)}
-                        </div>
+                    {currentWorkout.exercises && currentWorkout.exercises.length > 0 && (
+                        <Accordion alwaysOpen>
+                            {currentWorkout.exercises.map((x, i) => <Exercise key={x.id} index={i} name={x.name} sets={x.sets} addSet={(weight, reps) => addSet(x.id, weight, reps)}/>)}
+                        </Accordion>
                     )}
                     <Button onClick={() => saveWorkout()}>Save workout</Button>
                 </div>
