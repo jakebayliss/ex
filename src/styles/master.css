@@ -23,17 +23,16 @@ li a {
     color: white;
 }
 
-.container {
-    margin: auto;
-    width: 90%;
-}
-
 .accordion-body {
     padding: 10px;
 }
 
 .accordion-button {
     padding: 12px;
+}
+
+.card {
+    margin: 4px 0;
 }
 
 .card-header {
