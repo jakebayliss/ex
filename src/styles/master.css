@@ -35,3 +35,11 @@ li a {
 .accordion-button {
     padding: 12px;
 }
+
+.card-header {
+    color: black;
+}
+
+.card-body {
+    padding: 5px 15px;
+}

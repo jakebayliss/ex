@@ -26,6 +26,15 @@ export default class Api {
         return await response.json();
     }
 
+    getWorkouts = async (id) => {
+        const response = await fetch(`${this.url}/user/${id}/workouts`);
+        if(response) {
+            var current = await response.json();
+            return current;
+        }
+        return null;
+    }
+
     getCurrentWorkout = async (userId) => {
         const response = await fetch(`${this.url}/user/${userId}/currentworkouts`);
         if(response) {
@@ -35,12 +44,16 @@ export default class Api {
         return null;
     }
 
-    saveWorkout = async (id) => {
+    saveWorkout = async (id, caloriesBurned) => {
+        const data = {
+            caloriesBurned: caloriesBurned
+        };
         const response = await fetch(`${this.url}/workouts/${id}/save`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(data)
         });
         if(response) {
             return true;

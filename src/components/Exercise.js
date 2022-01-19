@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import Set from './Set';
+
 import '../styles/exercise.css';
 
 import Button from 'react-bootstrap/Button';
@@ -17,24 +19,20 @@ const Exercise = ({index, name, sets, addSet}) => {
             <p>Ex. {index + 1}: {name}</p>
         </AccordionHeader>
         <AccordionBody>
-            <div className='set-control-container'>
-                <Button style={{marginRight: '10px'}} onClick={() => addSet(weight, reps)}>Add</Button>
-                <div className='set-control'>
-                    <p style={{marginRight: '5px'}}>Weight:</p><FormControl style={{width: '40px', padding: '5px'}} type="number" placeholder='Weight' value={weight} onChange={e => setWeight(e.target.value)}/>
+            {!readOnly && (
+                <div className='set-control-container'>
+                    <Button style={{marginRight: '10px'}} onClick={() => addSet(weight, reps)}>Add</Button>
+                    <div className='set-control'>
+                        <p style={{marginRight: '5px'}}>Weight:</p><FormControl style={{width: '40px', padding: '5px'}} type="number" placeholder='Weight' value={weight} onChange={e => setWeight(e.target.value)}/>
+                    </div>
+                    <div className='set-control'>
+                        <p style={{marginRight: '5px'}}>Reps: </p><FormControl style={{width: '40px', padding: '5px'}} type="number" placeholder='Reps' value={reps} onChange={e => setReps(e.target.value)}/>
+                    </div>
                 </div>
-                <div className='set-control'>
-                    <p style={{marginRight: '5px'}}>Reps: </p><FormControl style={{width: '40px', padding: '5px'}} type="number" placeholder='Reps' value={reps} onChange={e => setReps(e.target.value)}/>
-                </div>
-            </div>
+            )}
             {sets && sets.length > 0 && (
                 <div className="set-container">
-                    {sets.map((x, i) => 
-                        <div key={x.id} className='set'>
-                            <p>Set {i + 1}</p>
-                            <p>Weight: {x.weight}</p>
-                            <p>Reps: {x.reps}</p>
-                        </div>
-                    )}
+                    {sets.map((x, i) => <Set key={x.id} i={i} weight={x.weight} reps={x.reps} />)}
                 </div>
             )}
         </AccordionBody>
